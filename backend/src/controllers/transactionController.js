@@ -6,7 +6,7 @@ export const addTransaction = async (req, res) => {
     const { type, amount, category, description, date } = req.body;
 
     // Validation
-    if (!type || !amount || !category || !date) {
+    if (!type || !amount || amount < 1 || !category || !date) {
       return res.status(400).json({ message: "Required fields missing" });
     }
 
@@ -74,7 +74,7 @@ export const getTotal = async (req, res) => {
 export const uploadStatement = async (req, res) => {
   try {
     console.log('1 - file received:', req.file?.originalname);
-    const csvString = req.file.buffer.toString('utf-8');
+    const csvString = req.file.buffer.toString('utf-8');//Converts raw bytes in memory into a readable Js string
     console.log('2 - csv string length:', csvString.length);
     const transactions = await categorizeTransactions(csvString); // categorize from gemini API
     console.log('3 - transactions from gemini:', transactions);
